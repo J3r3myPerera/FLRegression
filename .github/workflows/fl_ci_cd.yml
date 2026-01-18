@@ -2,9 +2,9 @@ name: FL Personal Finance CI/CD
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ FLregression, main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ FLregression, main, master ]
   workflow_dispatch:  # Allow manual triggering
 
 env:
