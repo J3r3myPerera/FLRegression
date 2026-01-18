@@ -107,6 +107,7 @@ jobs:
       
       - name: Run smoke test (1 round simulation)
         run: |
+          cd flowertry
           python main.py
         timeout-minutes: 10
 
