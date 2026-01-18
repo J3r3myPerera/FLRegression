@@ -2,9 +2,9 @@ name: FL Personal Finance CI/CD
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ FLregression, main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ FLregression, main, master ]
   workflow_dispatch:  # Allow manual triggering
 
 env:
@@ -107,7 +107,8 @@ jobs:
       
       - name: Run smoke test (1 round simulation)
         run: |
-          python fl_personal_finance_implementation.py
+          cd flowertry
+          python main.py
         timeout-minutes: 10
 
   # Job 4: Full FL Experiment (only on main/master branch)
