@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # FL Server
+  fl-server:
+    build: .
+    container_name: fl-server
+    command: python server.py
+    volumes:
+      - ./results:/app/results
+      - ./logs:/app/logs
+    environment:
+      - SERVER_ADDRESS=0.0.0.0:8080
+      - NUM_ROUNDS=10
+    networks:
+      - fl-network
+    ports:
+      - "8080:8080"
+
+  # FL Client 1 (Tier 1 city)
+  fl-client-1:
+    build: .
+    container_name: fl-client-tier1-1
+    command: python client.py --client-id 1 --tier 1
+    depends_on:
+      - fl-server
+    environment:
+      - SERVER_ADDRESS=fl-server:8080
+      - CLIENT_ID=1
+      - TIER=1
+    networks:
+      - fl-network
+
+  # FL Client 2 (Tier 1 city)
+  fl-client-2:
+    build: .
+    container_name: fl-client-tier1-2
+    command: python client.py --client-id 2 --tier 1
+    depends_on:
+      - fl-server
+    environment:
+      - SERVER_ADDRESS=fl-server:8080
+      - CLIENT_ID=2
+      - TIER=1
+    networks:
+      - fl-network
+
+  # FL Client 3 (Tier 2 city)
+  fl-client-3:
+    build: .
+    container_name: fl-client-tier2-1
+    command: python client.py --client-id 3 --tier 2
+    depends_on:
+      - fl-server
+    environment:
+      - SERVER_ADDRESS=fl-server:8080
+      - CLIENT_ID=3
+      - TIER=2
+    networks:
+      - fl-network
+
+  # Monitoring/Visualization (optional)
+  tensorboard:
+    image: tensorflow/tensorflow:latest
+    container_name: fl-tensorboard
+    command: tensorboard --logdir=/logs --host=0.0.0.0
+    volumes:
+      - ./logs:/logs
+    ports:
+      - "6006:6006"
+    networks:
+      - fl-network
+
+networks:
+  fl-network:
+    driver: bridge
+
+volumes:
+  results:
+  logs:
